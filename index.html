@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sub-Meter Electricity Billing Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    
+    <img class="logo" src="meralco.png">
+
+    <div class="form-group">
+        <br>
+        <br>
+        <h2 style="text-align: right;">Sub-Meter Electricity Billing Calculator</h2>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" placeholder="Enter name">
+    </div>
+
+    <div class="form-group">
+        <label for="presentReading">Present Reading:</label>
+        <input type="number" id="presentReading" placeholder="Enter Present Reading">
+    </div>
+
+    <div class="form-group">
+        <label for="previousReading">Previous Reading:</label>
+        <input type="number" id="previousReading" placeholder="Enter Previous Reading">
+    </div>
+
+    <div class="form-group">
+        <label for="monthlyBilling">Monthly Billing (₱):</label>
+        <input type="number" id="monthlyBilling" placeholder="Enter Monthly Billing">
+    </div>
+
+    <div class="form-group">
+        <label for="ratePerKwh">Rate per kWh (₱):</label>
+        <input type="number" id="ratePerKwh" placeholder="Enter Rate per kWh">
+    </div>
+
+    <div class="form-group inline">
+        <label for="startDate">Billing Period:</label>
+        <input type="date" id="startDate" placeholder="Start Date">
+        <input type="date" id="endDate" placeholder="End Date">
+    </div>
+
+    <div class="form-group result">
+        <h4>RESULT</h4>
+        <hr>
+        <p id="billingPeriod">Billing Period: [Start Date] to [End Date]</p>
+        <p>Total kWh Usage: <span id="totalUsage">0</span> kWh</p>
+        <p>Rate per kWh: ₱<span id="ratePerKwhDisplay">0.00</span></p>
+        <p class="result2">Total Amount Due: <span style="color: #dd0606;" id="totalAmountDue">₱ 0.00</span></p>
+    </div>
+
+    <!-- Barcode Display Section -->
+    <div class="form-group">
+        <h3>Generated Barcode</h3>
+        <svg id="barcode"></svg> <!-- Barcode will be generated here -->
+    </div>
+
+    <!-- Align buttons -->
+    <div class="form-group full-width" style="text-align: center;">
+        <button onclick="calculateBill()">Calculate</button>
+        <button class="print-btn" onclick="window.print()">Print Calculation</button>
+    </div>
+</div>
+
+<script>
+    function calculateBill() {
+        var presentReading = parseFloat(document.getElementById('presentReading').value);
+        var previousReading = parseFloat(document.getElementById('previousReading').value);
+        var ratePerKwh = parseFloat(document.getElementById('ratePerKwh').value);
+        var startDate = document.getElementById('startDate').value;
+        var endDate = document.getElementById('endDate').value;
+
+        if (!isNaN(presentReading) && !isNaN(previousReading) && !isNaN(ratePerKwh)) {
+            var totalUsage = presentReading - previousReading;
+            var totalAmountDue = totalUsage * ratePerKwh;
+            var uniqueCode = new Date().getTime(); // Generate a unique code based on timestamp
+
+            document.getElementById('totalUsage').innerText = totalUsage.toFixed(2);
+            document.getElementById('ratePerKwhDisplay').innerText = ratePerKwh.toFixed(2);
+            document.getElementById('totalAmountDue').innerText = totalAmountDue.toFixed(2);
+            document.getElementById('billingPeriod').innerText = 'Billing Period: ' + startDate + ' to ' + endDate;
+
+            // Generate barcode with a unique code and total amount due as content
+            JsBarcode("#barcode", uniqueCode + "-" + totalAmountDue.toFixed(2), {
+                format: "CODE128",
+                displayValue: true,
+                fontSize: 16, // Adjust font size
+                width: 1.8, // Adjust width of bars
+                height: 100 // Adjust height of barcode
+            });
+
+        } else {
+            alert('Please fill all fields with valid numbers.');
+        }
+    }
+</script>
+
+</body>
+</html>

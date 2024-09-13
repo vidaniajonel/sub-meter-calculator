@@ -56,6 +56,7 @@
     </div>
 
     <div class="form-group result">
+        <button class="btn2" onclick="calculateBill()">Calculate</button>
         <h4>RESULT</h4>
         <hr>
         <div class="details">
@@ -85,7 +86,6 @@
 
     <!-- Align buttons -->
     <div class="form-group full-width" style="text-align: center;">
-        <button onclick="calculateBill()">Calculate</button>
         <button class="print-btn" onclick="window.print()">Print Calculation</button>
     </div>
 
@@ -120,7 +120,7 @@
                 format: "CODE128",
                 displayValue: true,
                 fontSize: 16, // Adjust font size
-                width: 1.3, // Adjust width of bars
+                width: 1.5, // Adjust width of bars
                 height: 100 // Adjust height of barcode
             });
 
